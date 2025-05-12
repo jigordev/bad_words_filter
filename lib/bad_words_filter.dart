@@ -17,10 +17,10 @@ class BadWordsFilter extends StatefulWidget {
   });
 
   @override
-  BadWordsFilterState createState() => BadWordsFilterState();
+  State<BadWordsFilter> createState() => _BadWordsFilterState();
 }
 
-class BadWordsFilterState extends State<BadWordsFilter> {
+class _BadWordsFilterState extends State<BadWordsFilter> {
   TextEditingController? _controller;
   VoidCallback? _listener;
   Timer? _debounceTimer;
