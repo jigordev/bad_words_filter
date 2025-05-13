@@ -1,4 +1,4 @@
-name: bad_words_filter
+name: bad_words_moderator
 description: "Flutter widget and functions to filter bad words from input text."
 version: 0.0.1
 homepage:

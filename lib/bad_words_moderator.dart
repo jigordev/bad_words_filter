@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:bad_words_filter/util/words_detector.dart';
+import 'package:bad_words_moderator/util/words_detector.dart';
 
-class BadWordsFilter extends StatefulWidget {
+class BadWordsModerator extends StatefulWidget {
   final Widget child;
   final Future<bool> Function(String text, String? wordListFile) detector;
   final Future<void> Function(String text) onDetected;
   final Duration debounce;
 
-  const BadWordsFilter({
+  const BadWordsModerator({
     super.key,
     required this.child,
     required this.onDetected,
@@ -17,10 +17,10 @@ class BadWordsFilter extends StatefulWidget {
   });
 
   @override
-  State<BadWordsFilter> createState() => _BadWordsFilterState();
+  State<BadWordsModerator> createState() => _BadWordsModeratorState();
 }
 
-class _BadWordsFilterState extends State<BadWordsFilter> {
+class _BadWordsModeratorState extends State<BadWordsModerator> {
   TextEditingController? _controller;
   VoidCallback? _listener;
   Timer? _debounceTimer;

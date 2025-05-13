@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bad_words_filter/bad_words_filter.dart';
+import 'package:bad_words_moderator/bad_words_moderator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            BadWordsFilter(
+            BadWordsModerator(
               child: TextField(
                 decoration: InputDecoration(labelText: 'Enter your text'),
               ),
