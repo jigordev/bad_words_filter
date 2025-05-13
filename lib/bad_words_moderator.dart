@@ -21,10 +21,9 @@ class BadWordsModerator extends StatefulWidget {
 }
 
 class _BadWordsModeratorState extends State<BadWordsModerator> {
-  TextEditingController? _controller;
-  VoidCallback? _listener;
-  Timer? _debounceTimer;
-  String _lastValue = '';
+  final Map<TextEditingController, VoidCallback> _listeners = {};
+  final Map<TextEditingController, Timer> _debounceTimers = {};
+  final Map<TextEditingController, String> _lastValues = {};
 
   @override
   void didChangeDependencies() {
@@ -34,52 +33,64 @@ class _BadWordsModeratorState extends State<BadWordsModerator> {
 
   void _setupListener() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final editable = _findEditableText(context);
-      if (editable != null && editable.controller != _controller) {
-        if (_controller != null && _listener != null) {
-          _controller!.removeListener(_listener!);
-        }
+      for (var entry in _listeners.entries) {
+        entry.key.removeListener(entry.value);
+      }
+      _listeners.clear();
+      _lastValues.clear();
 
-        _controller = editable.controller;
-        _listener = () {
-          _debounceTimer?.cancel();
-          _debounceTimer = Timer(widget.debounce, () async {
-            final text = _controller!.text;
-            if (text != _lastValue) {
-              _lastValue = text;
+      final editables = _findEditableTexts(context);
+      for (final editable in editables) {
+        final controller = editable.controller;
+
+        void _listener() {
+          _debounceTimers[controller]?.cancel();
+          _debounceTimers[controller] = Timer(widget.debounce, () async {
+            final text = controller.text;
+            if (text != _lastValues[controller]) {
+              _lastValues[controller] = text;
               final hasBadWords = await widget.detector(text, null);
               if (hasBadWords) {
                 await widget.onDetected(text);
               }
             }
           });
-        };
+        }
 
-        _controller!.addListener(_listener!);
+        final listener = _listener;
+
+        controller.addListener(listener);
+        _listeners[controller] = listener;
+        _lastValues[controller] = controller.text;
       }
     });
   }
 
-  EditableText? _findEditableText(BuildContext context) {
-    EditableText? editable;
+  List<EditableText> _findEditableTexts(BuildContext context) {
+    List<EditableText> editables = [];
     void visitor(Element element) {
       if (element.widget is EditableText) {
-        editable = element.widget as EditableText;
+        editables.add(element.widget as EditableText);
       } else {
         element.visitChildren(visitor);
       }
     }
 
     context.visitChildElements(visitor);
-    return editable;
+    return editables;
   }
 
   @override
   void dispose() {
-    _debounceTimer?.cancel();
-    if (_controller != null && _listener != null) {
-      _controller!.removeListener(_listener!);
+    for (var timer in _debounceTimers.values) {
+      timer.cancel();
     }
+    _debounceTimers.clear();
+
+    for (var entry in _listeners.entries) {
+      entry.key.removeListener(entry.value);
+    }
+    _listeners.clear();
     super.dispose();
   }
 
