@@ -43,7 +43,7 @@ class _BadWordsModeratorState extends State<BadWordsModerator> {
       for (final editable in editables) {
         final controller = editable.controller;
 
-        void _listener() {
+        void badWordsListener() {
           _debounceTimers[controller]?.cancel();
           _debounceTimers[controller] = Timer(widget.debounce, () async {
             final text = controller.text;
@@ -57,7 +57,7 @@ class _BadWordsModeratorState extends State<BadWordsModerator> {
           });
         }
 
-        final listener = _listener;
+        final listener = badWordsListener;
 
         controller.addListener(listener);
         _listeners[controller] = listener;
