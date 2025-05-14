@@ -1,12 +1,12 @@
 name: bad_words_moderator
 description: "Flutter widget and functions to filter bad words from input text."
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/jigordev/bad_words_moderator
 repository: https://github.com/jigordev/bad_words_moderator
 
 environment:
-  sdk: ^3.7.2
-  flutter: ">=1.17.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=2.10.0"
 
 dependencies:
   flutter:
