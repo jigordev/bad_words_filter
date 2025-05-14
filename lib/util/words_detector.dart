@@ -1,13 +1,14 @@
 import 'wordlist.dart';
 
-String normalize(String input) {
-  return input.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
-}
-
 Future<bool> badWordsDetector(String text, [String? wordListFile]) async {
-  final normalized = normalize(text);
   final wordList = await loadWordList(
     wordListFile ?? 'packages/bad_words_moderator/assets/wordlist.txt',
   );
-  return wordList.any((word) => normalized.contains(word));
+  final normalizedWords = text
+      .toLowerCase()
+      .split(RegExp(r'[\s\W_]+'))
+      .map((word) => word.replaceAll(RegExp(r'[^a-z0-9]'), ''))
+      .where((word) => word.isNotEmpty);
+
+  return normalizedWords.any((word) => wordList.contains(word));
 }
