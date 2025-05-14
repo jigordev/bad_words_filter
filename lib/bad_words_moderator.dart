@@ -4,14 +4,16 @@ import 'package:bad_words_moderator/util/words_detector.dart';
 
 class BadWordsModerator extends StatefulWidget {
   final Widget child;
+  final String? wordListFile;
   final Future<bool> Function(String text, String? wordListFile) detector;
-  final Future<void> Function(String text) onDetected;
+  final Future<void> Function(TextEditingController controller) onDetected;
   final Duration debounce;
 
   const BadWordsModerator({
     super.key,
     required this.child,
     required this.onDetected,
+    this.wordListFile,
     this.detector = badWordsDetector,
     this.debounce = const Duration(milliseconds: 300),
   });
@@ -49,9 +51,10 @@ class _BadWordsModeratorState extends State<BadWordsModerator> {
             final text = controller.text;
             if (text != _lastValues[controller]) {
               _lastValues[controller] = text;
-              final hasBadWords = await widget.detector(text, null);
+              final hasBadWords =
+                  await widget.detector(text, widget.wordListFile);
               if (hasBadWords) {
-                await widget.onDetected(text);
+                await widget.onDetected(controller);
               }
             }
           });
