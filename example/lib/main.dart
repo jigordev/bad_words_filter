@@ -40,13 +40,15 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             BadWordsModerator(
-              child: TextField(
-                decoration: InputDecoration(labelText: 'Enter your text'),
-              ),
               controllers: [_controller],
               onDetected: (String text) async {
-                print('Bad word detected: ${_controller.text}');
+                _controller.clear();
+                print('Bad word detected: $text');
               },
+              child: TextField(
+                controller: _controller,
+                decoration: InputDecoration(labelText: 'Enter your text'),
+              ),
             ),
           ],
         ),
