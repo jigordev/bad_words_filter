@@ -27,6 +27,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +43,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: TextField(
                 decoration: InputDecoration(labelText: 'Enter your text'),
               ),
+              controllers: [_controller],
               onDetected: (String text) async {
-                print('Bad word detected: $text');
+                print('Bad word detected: ${_controller.text}');
               },
             ),
           ],
