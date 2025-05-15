@@ -8,7 +8,7 @@ class BadWordsModerator extends StatefulWidget {
   final List<TextEditingController> controllers;
   final String? wordListFile;
   final Future<bool> Function(String text, [String? wordListFile]) detector;
-  final Future<void> Function(TextEditingController controller) onDetected;
+  final Future<void> Function(String text) onDetected;
   final Duration debounce;
 
   const BadWordsModerator({
@@ -71,7 +71,7 @@ class _BadWordsModeratorState extends State<BadWordsModerator> {
             final hasBadWords =
                 await widget.detector(text, widget.wordListFile);
             if (hasBadWords) {
-              await widget.onDetected(controller);
+              await widget.onDetected(text);
             }
           }
         });
